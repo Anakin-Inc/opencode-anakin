@@ -38,7 +38,7 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "node --test test/",
+    "test": "node --test \"test/*.test.ts\"",
     "sync-skills": "node scripts/sync-skills.mjs ../agent-skills"
   },
   "devDependencies": {
