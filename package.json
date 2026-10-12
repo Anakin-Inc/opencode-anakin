@@ -1,0 +1,53 @@
+{
+  "name": "@anakin-io/opencode",
+  "version": "0.1.0",
+  "description": "Anakin plugin for OpenCode: Anakin's hosted MCP server (22 tools for web scraping, search, crawling, deep research, Wire site actions, monitors and browser tasks) plus Anakin skills",
+  "type": "module",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "index.ts",
+    "skills"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "anakin",
+    "mcp",
+    "web-scraping",
+    "crawling",
+    "search",
+    "data-extraction",
+    "ai"
+  ],
+  "license": "MIT",
+  "homepage": "https://anakin.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anakin-Inc/opencode-anakin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Anakin-Inc/opencode-anakin/issues"
+  },
+  "author": {
+    "name": "Anakin",
+    "email": "support@anakin.io",
+    "url": "https://anakin.io"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --test test/",
+    "sync-skills": "node scripts/sync-skills.mjs ../agent-skills"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.19.0",
+    "@opencode/plugin": "^2.0.27",
+    "@types/node": "^25.2.2",
+    "typescript": "^5.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
