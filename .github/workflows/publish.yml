@@ -1,0 +1,54 @@
+# Publishes @anakin-io/opencode to npm when a version tag (v0.1.0) is pushed, with an npm
+# provenance statement tying the package to this repository and commit.
+#
+# Uses npm Trusted Publishing, so no npm token is stored. One-time setup on npmjs.com,
+# once the package exists (needs a package owner):
+#   @anakin-io/opencode > Settings > Trusted Publisher > GitHub Actions
+#     Organization or user: Anakin-Inc
+#     Repository:           opencode-anakin
+#     Workflow filename:    publish.yml
+#     Environment:          (leave blank)
+#
+# Release: bump "version" in package.json, merge to main, then
+#   git tag v<version> && git push origin v<version>
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      # Mints the OIDC token used for Trusted Publishing and the provenance signature.
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      # Trusted Publishing needs npm 11.5.1 or later.
+      - name: Update npm
+        run: npm install -g npm@latest
+      - name: Check the tag matches package.json
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "${REF_NAME#v}" != "$version" ]; then
+            echo "::error::Tag $REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - name: Publish with provenance
+        run: npm publish --provenance --access public
